@@ -54,7 +54,17 @@ class RecommendationService {
       return recommendation;
     }
     const recommendation = await randomRecommendation(getRows);
+
     return recommendation;
+  }
+
+  async getTop({ limit }) {
+    const recommendationRepository = new RecommendationRepository();
+
+    const result = await recommendationRepository.findByLimit({ limit });
+    if (!result.length) throw new Error('No recommendations yet');
+
+    return result;
   }
 }
 
