@@ -29,7 +29,24 @@ class RecommendationController {
       const recommendationService = new RecommendationService();
       await recommendationService.upvote({ id });
       return res.status(200).send({
-        message: 'Successfully updated!',
+        message: 'Successfully updated! +1',
+      });
+    } catch (err) {
+      if (err.message.includes('found')) return res.status(404).send(err.message);
+      return res.status(500).send(`Error on Recommendations: Unable to update recommendation - ${err.message}`);
+    }
+  }
+
+  async postDownvote(req, res) {
+    const { id } = req.params;
+    const { error } = recommendationIdSchema.validate({ id });
+    if (error) return res.status(400).send('Id is invalid');
+
+    try {
+      const recommendationService = new RecommendationService();
+      await recommendationService.downvote({ id });
+      return res.status(200).send({
+        message: 'Successfully updated -1!',
       });
     } catch (err) {
       if (err.message.includes('found')) return res.status(404).send(err.message);
