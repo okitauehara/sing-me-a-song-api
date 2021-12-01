@@ -1,11 +1,8 @@
 import { Router } from 'express';
+import recommendationRouter from './routes/recommendation.route.js';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.status(200).send({
-    message: 'Test: Welcome to Sing Me A Song API!',
-  });
-});
+router.use('/', recommendationRouter);
 
 export default router;
