@@ -1,10 +1,17 @@
 import connection from '../database/connection.js';
 
 class RecommendationRepository {
-  async find({ youtubeLink }) {
+  async findByYouTubeLink({ youtubeLink }) {
     const result = await connection.query(`
       SELECT * FROM recommendations WHERE "youtubeLink" = $1
     `, [youtubeLink]);
+    return result.rows[0];
+  }
+
+  async findById({ recommendationId }) {
+    const result = await connection.query(`
+      SELECT * FROM recommendations WHERE id = $1
+    `, [recommendationId]);
     return result.rows[0];
   }
 
