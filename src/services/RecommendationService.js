@@ -1,4 +1,5 @@
 import RecommendationRepository from '../repositories/RecommendationRepository.js';
+import { randomRecommendation, randomScore } from './RandomService.js';
 
 class RecommendationService {
   async post({ name, youtubeLink }) {
@@ -39,6 +40,21 @@ class RecommendationService {
     }
 
     return result;
+  }
+
+  async get() {
+    const recommendationRepository = new RecommendationRepository();
+    const sortNumber = await randomScore();
+
+    const getRows = await recommendationRepository.findByScore({ sortNumber });
+    if (!getRows.length) {
+      const getAllRows = await recommendationRepository.findAll();
+      if (!getAllRows.length) throw new Error('No recommendations yet');
+      const recommendation = await randomRecommendation(getAllRows);
+      return recommendation;
+    }
+    const recommendation = await randomRecommendation(getRows);
+    return recommendation;
   }
 }
 

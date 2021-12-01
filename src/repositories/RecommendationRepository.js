@@ -15,8 +15,8 @@ class RecommendationRepository {
     return result.rows[0];
   }
 
-  async findByScore({ score }) {
-    if (score === 'good') {
+  async findByScore({ sortNumber }) {
+    if (sortNumber <= 7) {
       const result = await connection.query(`
       SELECT * FROM recommendations WHERE score > 10
     `);
@@ -24,6 +24,13 @@ class RecommendationRepository {
     }
     const result = await connection.query(`
       SELECT * FROM recommendations WHERE score <= 10
+    `);
+    return result.rows;
+  }
+
+  async findAll() {
+    const result = await connection.query(`
+      SELECT * FROM recommendations
     `);
     return result.rows;
   }
