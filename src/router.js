@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import recommendationRouter from './routes/recommendation.route.js';
+import recommendationRouter from './routers/recommendation.router.js';
 
 const router = Router();
 

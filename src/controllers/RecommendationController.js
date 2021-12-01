@@ -53,6 +53,17 @@ class RecommendationController {
       return res.status(500).send(`Error on Recommendations: Unable to update recommendation - ${err.message}`);
     }
   }
+
+  async getRecommendation(req, res) {
+    try {
+      const recommendationService = new RecommendationService();
+      const recommendation = await recommendationService.get();
+      return res.status(200).send(recommendation);
+    } catch (err) {
+      if (err.message.includes('yet')) return res.status(409).send(err.message);
+      return res.status(500).send(`Error on Recommendations: Unable to get recommendation - ${err.message}`);
+    }
+  }
 }
 
 export default new RecommendationController();

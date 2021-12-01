@@ -15,6 +15,26 @@ class RecommendationRepository {
     return result.rows[0];
   }
 
+  async findByScore({ sortNumber }) {
+    if (sortNumber <= 7) {
+      const result = await connection.query(`
+      SELECT * FROM recommendations WHERE score > 10
+    `);
+      return result.rows;
+    }
+    const result = await connection.query(`
+      SELECT * FROM recommendations WHERE score <= 10
+    `);
+    return result.rows;
+  }
+
+  async findAll() {
+    const result = await connection.query(`
+      SELECT * FROM recommendations
+    `);
+    return result.rows;
+  }
+
   async insert({ name, youtubeLink }) {
     const result = await connection.query(`
       INSERT INTO recommendations (name, "youtubeLink") VALUES ($1, $2) RETURNING *
