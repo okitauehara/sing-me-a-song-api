@@ -60,7 +60,7 @@ class RecommendationController {
       const recommendation = await recommendationService.get();
       return res.status(200).send(recommendation);
     } catch (err) {
-      if (err.message.includes('yet')) return res.status(409).send(err.message);
+      if (err.message.includes('yet')) return res.status(404).send(err.message);
       return res.status(500).send(`Error on Recommendations: Unable to get recommendation - ${err.message}`);
     }
   }
