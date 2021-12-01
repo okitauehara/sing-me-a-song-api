@@ -34,6 +34,12 @@ class RecommendationRepository {
     `, [recommendationId]);
     return result.rows[0];
   }
+
+  async remove({ recommendationId }) {
+    return connection.query(`
+      DELETE FROM recommendations WHERE id = $1 
+    `, [recommendationId]);
+  }
 }
 
 export default RecommendationRepository;
