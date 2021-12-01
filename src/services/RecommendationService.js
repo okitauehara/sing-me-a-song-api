@@ -23,6 +23,23 @@ class RecommendationService {
     const result = await recommendationRepository.vote({ type, recommendationId: id });
     if (!result) throw new Error('Unable to update vote');
   }
+
+  async downvote({ id }) {
+    const recommendationRepository = new RecommendationRepository();
+    const type = 'downvote';
+
+    const checkRecommendation = await recommendationRepository.findById({ recommendationId: id });
+    if (!checkRecommendation) throw new Error('Recommendation not found');
+
+    const result = await recommendationRepository.vote({ type, recommendationId: id });
+    if (!result) throw new Error('Unable to update vote');
+
+    if (result.score < -5) {
+      await recommendationRepository.remove({ recommendationId: id });
+    }
+
+    return result;
+  }
 }
 
 export default RecommendationService;
