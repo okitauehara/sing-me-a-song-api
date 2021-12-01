@@ -39,7 +39,7 @@ class RecommendationRepository {
     const result = await connection.query(`
       SELECT * FROM recommendations
       ORDER BY score DESC
-      LIMIT = $1
+      LIMIT $1
     `, [limit]);
     return result.rows;
   }
