@@ -15,7 +15,7 @@ class RecommendationController {
       });
     } catch (error) {
       if (error.message.includes('already')) return res.status(409).send(error.message);
-      return res.status(500).send(error.message);
+      return res.status(500).send(`Error on Recommendations: Unable to post recommendation - ${error.message}`);
     }
   }
 }
