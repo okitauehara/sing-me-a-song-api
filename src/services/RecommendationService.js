@@ -15,9 +15,13 @@ class RecommendationService {
 
   async upvote({ id }) {
     const recommendationRepository = new RecommendationRepository();
+    const type = 'upvote';
 
-    const checkRecommendation = await recommendationRepository.findById({ id });
+    const checkRecommendation = await recommendationRepository.findById({ recommendationId: id });
     if (!checkRecommendation) throw new Error('Recommendation not found');
+
+    const result = await recommendationRepository.vote({ type, recommendationId: id });
+    if (!result) throw new Error('Unable to update vote');
   }
 }
 

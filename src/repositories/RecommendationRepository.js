@@ -22,9 +22,15 @@ class RecommendationRepository {
     return result.rows[0];
   }
 
-  async vote({ recommendationId }) {
-    const result = await connection.query(`
+  async vote({ type, recommendationId }) {
+    if (type === 'upvote') {
+      const result = await connection.query(`
       UPDATE recommendations SET score = score + 1 WHERE id = $1 RETURNING *
+    `, [recommendationId]);
+      return result.rows[0];
+    }
+    const result = await connection.query(`
+      UPDATE recommendations SET score = score - 1 WHERE id = $1 RETURNING *
     `, [recommendationId]);
     return result.rows[0];
   }
