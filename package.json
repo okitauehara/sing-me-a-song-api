@@ -1,0 +1,35 @@
+{
+  "name": "sing-me-a-song",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test npx jest -i",
+    "start": "NODE_ENV=prod node src/server.js",
+    "start:dev": "NODE_ENV=dev npx nodemon src/server.js",
+    "start:test": "NODE_ENV=test npx nodemon src/server.js",
+    "deploy": "git push heroku main",
+    "test:watch": "NODE_ENV=test npx jest -i --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "joi": "^17.4.2",
+    "ntl": "^5.1.0",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.16.4",
+    "@babel/preset-env": "^7.16.4",
+    "babel-jest": "^27.4.2",
+    "eslint": "^8.3.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "jest": "^27.4.2"
+  }
+}
