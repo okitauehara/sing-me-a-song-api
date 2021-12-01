@@ -17,6 +17,14 @@
             {
                 "js": "ignorePackages"
             }
-        ]
+        ],
+        "import/prefer-default-export": 0,
+        "no-irregular-whitespace": [
+            "error",
+            {
+                "skipRegExps": true
+            }
+        ],
+        "class-methods-use-this": 0
     }
 }
