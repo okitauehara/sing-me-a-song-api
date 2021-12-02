@@ -4,8 +4,8 @@ import NotFound from '../errors/NotFound.js';
 import Conflict from '../errors/Conflict.js';
 
 async function post({ name, youtubeLink }) {
-  const checkEmail = await recommendationRepository.findByYouTubeLink({ youtubeLink });
-  if (checkEmail) throw new Conflict('Link already registered');
+  const checkLink = await recommendationRepository.findByYouTubeLink({ youtubeLink });
+  if (checkLink) throw new Conflict('Link already registered');
 
   const result = await recommendationRepository.insert({ name, youtubeLink });
   return result;
