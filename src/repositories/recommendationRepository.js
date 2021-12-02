@@ -4,6 +4,7 @@ async function findByYouTubeLink({ youtubeLink }) {
   const result = await connection.query(`
       SELECT * FROM recommendations WHERE "youtubeLink" = $1
     `, [youtubeLink]);
+  if (!result) return null;
   return result.rows[0];
 }
 
@@ -11,6 +12,7 @@ async function findById({ recommendationId }) {
   const result = await connection.query(`
       SELECT * FROM recommendations WHERE id = $1
     `, [recommendationId]);
+  if (!result) return null;
   return result.rows[0];
 }
 
@@ -19,11 +21,13 @@ async function findByScore({ sortNumber }) {
     const result = await connection.query(`
       SELECT * FROM recommendations WHERE score > 10
     `);
+    if (!result) return null;
     return result.rows;
   }
   const result = await connection.query(`
       SELECT * FROM recommendations WHERE score <= 10
     `);
+  if (!result) return null;
   return result.rows;
 }
 

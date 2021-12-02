@@ -1,6 +1,5 @@
 import * as recommendationService from '../../src/services/recommendationService.js';
 import * as recommendationRepository from '../../src/repositories/recommendationRepository.js';
-import Conflict from '../../src/errors/Conflict.js';
 
 const sut = recommendationService;
 
@@ -27,18 +26,39 @@ describe('Unit tests for RecommendationService.js', () => {
     mockRecommendationRepository.remove().mockReset();
   });
 
-  describe('Unit tests for post', () => {
+  describe('Unit tests for post function', () => {
     it('Should return an object with the inserted recommendation', async () => {
-      mockRecommendationRepository.findById().mockImplementationOnce(() => []);
-      mockRecommendationRepository.insert().mockImplementationOnce(() => ({ id: 1 }));
+      mockRecommendationRepository.findByYouTubeLink().mockImplementationOnce(() => null);
+      mockRecommendationRepository.insert().mockImplementationOnce(() => ({ object: true }));
       const result = await sut.post({ name: '', youtubeLink: '' });
-      expect(result).toEqual({ id: 1 });
+      expect(result).toEqual({ object: true });
     });
 
-    it('Should return an object with the inserted recommendation', async () => {
+    it('Should return an error by conflict between links', async () => {
+      mockRecommendationRepository.findByYouTubeLink().mockImplementationOnce(() => ({ youtubeLink: '' }));
+      try {
+        await sut.post({ name: '', youtubeLink: '' });
+      } catch (error) {
+        expect(error.name).toEqual('Conflict');
+      }
+    });
+  });
+
+  describe('Unit tests for upvote function', () => {
+    it('Should return an object with the updated recommendation', async () => {
       mockRecommendationRepository.findById().mockImplementationOnce(() => ({ id: 1 }));
-      const result = sut.post({ name: '', youtubeLink: '' });
-      expect(() => result.toThrow(Conflict));
+      mockRecommendationRepository.vote().mockImplementationOnce(() => ({ object: true }));
+      const result = await sut.upvote({ id: 1 });
+      expect(result).toEqual({ object: true });
+    });
+
+    it('Should return an error: recommendation not found', async () => {
+      mockRecommendationRepository.findById().mockImplementationOnce(() => null);
+      try {
+        await sut.upvote({ id: 1 });
+      } catch (error) {
+        expect(error.name).toEqual('NotFound');
+      }
     });
   });
 });
