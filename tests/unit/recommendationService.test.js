@@ -27,7 +27,7 @@ describe('Unit tests for RecommendationService.js', () => {
     mockRecommendationRepository.remove().mockReset();
   });
 
-  describe('Unit tests for post', () => {
+  describe('Unit tests for post function', () => {
     it('Should return an object with the inserted recommendation', async () => {
       mockRecommendationRepository.findById().mockImplementationOnce(() => []);
       mockRecommendationRepository.insert().mockImplementationOnce(() => ({ id: 1 }));
@@ -35,7 +35,7 @@ describe('Unit tests for RecommendationService.js', () => {
       expect(result).toEqual({ id: 1 });
     });
 
-    it('Should return an object with the inserted recommendation', async () => {
+    it('Should return an error by conflict between links', async () => {
       mockRecommendationRepository.findById().mockImplementationOnce(() => ({ id: 1 }));
       const result = sut.post({ name: '', youtubeLink: '' });
       expect(() => result.toThrow(Conflict));
