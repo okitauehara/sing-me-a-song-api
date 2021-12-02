@@ -105,9 +105,16 @@ describe('Unit tests for RecommendationService.js', () => {
   });
 
   describe('Unit tests for get function', () => {
-    it('Should return one random recomendation between all recommendations', async () => {
+    it('Should return one random recomendation between all recommendations if there is no recommendations with good score', async () => {
       mockRecommendationRepository.findByScore(mockRandomFunctions.randomScore(7)).mockImplementationOnce(() => null);
       mockRecommendationRepository.findAll().mockImplementationOnce(() => [{ object: 'random' }]);
+      mockRandomFunctions.randomRecommendation([{ object: 'random' }]).mockImplementationOnce(() => ({ object: 'random' }));
+      const result = await sut.get();
+      expect(result).toEqual({ object: 'random' });
+    });
+
+    it('Should return one random recomendation between good recommendations', async () => {
+      mockRecommendationRepository.findByScore(mockRandomFunctions.randomScore(7)).mockImplementationOnce(() => () => [{ object: 'random' }]);
       mockRandomFunctions.randomRecommendation([{ object: 'random' }]).mockImplementationOnce(() => ({ object: 'random' }));
       const result = await sut.get();
       expect(result).toEqual({ object: 'random' });
