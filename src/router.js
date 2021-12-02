@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import recommendationRouter from './routers/recommendation.router.js';
 
-const router = Router();
+const router = new Router();
 
-router.use('/', recommendationRouter);
+router.use('/recommendations', recommendationRouter);
 
 export default router;
