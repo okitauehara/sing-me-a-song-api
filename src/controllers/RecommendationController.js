@@ -1,6 +1,8 @@
 import recommendationSchema from '../schemas/recommendationSchema.js';
 import recommendationIdSchema from '../schemas/recommendationIdSchema.js';
 import RecommendationService from '../services/RecommendationService.js';
+import NotFound from '../errors/NotFound.js';
+import Conflict from '../errors/Conflict.js';
 
 class RecommendationController {
   async postRecommendation(req, res) {
@@ -15,7 +17,7 @@ class RecommendationController {
         message: 'Successfully created!',
       });
     } catch (err) {
-      if (err.message.includes('already')) return res.status(409).send(err.message);
+      if (err instanceof Conflict) return res.status(409).send(err.message);
       return res.status(500).send(`Error on Recommendations: Unable to post recommendation - ${err.message}`);
     }
   }
@@ -32,7 +34,7 @@ class RecommendationController {
         message: 'Successfully updated! +1',
       });
     } catch (err) {
-      if (err.message.includes('found')) return res.status(404).send(err.message);
+      if (err instanceof NotFound) return res.status(404).send(err.message);
       return res.status(500).send(`Error on Recommendations: Unable to update recommendation - ${err.message}`);
     }
   }
@@ -49,7 +51,7 @@ class RecommendationController {
         message: 'Successfully updated -1!',
       });
     } catch (err) {
-      if (err.message.includes('found')) return res.status(404).send(err.message);
+      if (err instanceof NotFound) return res.status(404).send(err.message);
       return res.status(500).send(`Error on Recommendations: Unable to update recommendation - ${err.message}`);
     }
   }
@@ -60,7 +62,7 @@ class RecommendationController {
       const recommendation = await recommendationService.get();
       return res.status(200).send(recommendation);
     } catch (err) {
-      if (err.message.includes('yet')) return res.status(404).send(err.message);
+      if (err instanceof NotFound) return res.status(404).send(err.message);
       return res.status(500).send(`Error on Recommendations: Unable to get recommendation - ${err.message}`);
     }
   }
@@ -73,7 +75,7 @@ class RecommendationController {
       const recommendations = await recommendationService.getTop({ limit: amount });
       return res.status(200).send(recommendations);
     } catch (err) {
-      if (err.message.includes('yet')) return res.status(404).send(err.message);
+      if (err instanceof NotFound) return res.status(404).send(err.message);
       return res.status(500).send(`Error on Recommendations: Unable to get top recommendations - ${err.message}`);
     }
   }
