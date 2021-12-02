@@ -1,5 +1,5 @@
 import * as recommendationRepository from '../repositories/recommendationRepository.js';
-import { randomRecommendation, randomScore } from './randomService.js';
+import { randomRecommendation, randomScore } from '../utils/randomFunctions.js';
 import NotFound from '../errors/NotFound.js';
 import Conflict from '../errors/Conflict.js';
 
@@ -40,9 +40,9 @@ async function get() {
   const sortNumber = await randomScore();
 
   const getRows = await recommendationRepository.findByScore({ sortNumber });
-  if (!getRows.length) {
+  if (!getRows) {
     const getAllRows = await recommendationRepository.findAll();
-    if (!getAllRows.length) throw new NotFound('No recommendations yet');
+    if (!getAllRows) throw new NotFound('No recommendations yet');
     const recommendation = await randomRecommendation(getAllRows);
     return recommendation;
   }

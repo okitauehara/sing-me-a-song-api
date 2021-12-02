@@ -35,6 +35,7 @@ async function findAll() {
   const result = await connection.query(`
       SELECT * FROM recommendations
     `);
+  if (!result) return null;
   return result.rows;
 }
 
