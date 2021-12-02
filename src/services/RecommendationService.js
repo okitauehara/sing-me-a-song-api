@@ -11,7 +11,6 @@ class RecommendationService {
     if (checkEmail) throw new Conflict('Link already registered');
 
     const result = await recommendationRepository.insert({ name, youtubeLink });
-    if (!result) throw new Error('Unable to insert');
 
     return result;
   }
@@ -24,7 +23,8 @@ class RecommendationService {
     if (!checkRecommendation) throw new NotFound('Recommendation not found');
 
     const result = await recommendationRepository.vote({ type, recommendationId: id });
-    if (!result) throw new Error('Unable to update vote');
+
+    return result;
   }
 
   async downvote({ id }) {
@@ -35,8 +35,6 @@ class RecommendationService {
     if (!checkRecommendation) throw new NotFound('Recommendation not found');
 
     const result = await recommendationRepository.vote({ type, recommendationId: id });
-    if (!result) throw new Error('Unable to update vote');
-
     if (result.score < -5) {
       await recommendationRepository.remove({ recommendationId: id });
     }
@@ -62,6 +60,8 @@ class RecommendationService {
 
   async getTop({ limit }) {
     const recommendationRepository = new RecommendationRepository();
+
+    if (limit <= 0) throw new Error('Invalid amount');
 
     const result = await recommendationRepository.findByLimit({ limit });
     if (!result.length) throw new NotFound('No recommendations yet');
