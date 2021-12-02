@@ -1,5 +1,6 @@
 import * as recommendationService from '../../src/services/recommendationService.js';
 import * as recommendationRepository from '../../src/repositories/recommendationRepository.js';
+import Conflict from '../../src/errors/Conflict.js';
 
 const sut = recommendationService;
 
@@ -28,9 +29,16 @@ describe('Unit tests for RecommendationService.js', () => {
 
   describe('Unit tests for post', () => {
     it('Should return an object with the inserted recommendation', async () => {
-      jest.spyOn(recommendationRepository, 'insert').mockImplementationOnce(() => ({}));
+      mockRecommendationRepository.findById().mockImplementationOnce(() => []);
+      mockRecommendationRepository.insert().mockImplementationOnce(() => ({ id: 1 }));
       const result = await sut.post({ name: '', youtubeLink: '' });
-      expect(result).toEqual({});
+      expect(result).toEqual({ id: 1 });
+    });
+
+    it('Should return an object with the inserted recommendation', async () => {
+      mockRecommendationRepository.findById().mockImplementationOnce(() => ({ id: 1 }));
+      const result = sut.post({ name: '', youtubeLink: '' });
+      expect(() => result.toThrow(Conflict));
     });
   });
 });

@@ -8,6 +8,7 @@ async function post({ name, youtubeLink }) {
   if (checkEmail) throw new Conflict('Link already registered');
 
   const result = await recommendationRepository.insert({ name, youtubeLink });
+  console.log(result);
   return result;
 }
 
