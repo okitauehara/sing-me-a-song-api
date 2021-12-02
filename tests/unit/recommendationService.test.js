@@ -61,4 +61,39 @@ describe('Unit tests for RecommendationService.js', () => {
       }
     });
   });
+
+  describe('Unit tests for downvote function', () => {
+    it('Should return success if the returned score is -4', async () => {
+      mockRecommendationRepository.findById().mockImplementationOnce(() => ({ id: 1 }));
+      mockRecommendationRepository.vote().mockImplementationOnce(() => ({ score: -4 }));
+      const result = await sut.downvote({ id: 1 });
+      expect(result).toEqual({ score: -4 });
+    });
+
+    it('Should return success if the returned score is -5', async () => {
+      mockRecommendationRepository.findById().mockImplementationOnce(() => ({ id: 1 }));
+      mockRecommendationRepository.vote().mockImplementationOnce(() => ({ score: -5 }));
+      const result = await sut.downvote({ id: 1 });
+      expect(result).toEqual({ score: -5 });
+    });
+
+    it('Should return not found error if the returned score is -6', async () => {
+      mockRecommendationRepository.findById().mockImplementationOnce(() => null);
+      mockRecommendationRepository.vote().mockImplementationOnce(() => ({ score: -6 }));
+      try {
+        await sut.downvote({ id: 1 });
+      } catch (error) {
+        expect(error.name).toEqual('NotFound');
+      }
+    });
+
+    it('Should return an error: recommendation not found', async () => {
+      mockRecommendationRepository.findById().mockImplementationOnce(() => null);
+      try {
+        await sut.downvote({ id: 1 });
+      } catch (error) {
+        expect(error.name).toEqual('NotFound');
+      }
+    });
+  });
 });
