@@ -34,10 +34,13 @@ describe('Unit tests for RecommendationService.js', () => {
       expect(result).toEqual({ object: true });
     });
 
-    it('Should return an error by conflict between links', () => {
+    it('Should return an error by conflict between links', async () => {
       mockRecommendationRepository.findByYouTubeLink().mockImplementationOnce(() => ({ youtubeLink: '' }));
-      const result = sut.post({ name: '', youtubeLink: '' });
-      expect(() => result.toThrow('Link already registered'));
+      try {
+        await sut.post({ name: '', youtubeLink: '' });
+      } catch (error) {
+        expect(error.name).toEqual('Conflict');
+      }
     });
   });
 
@@ -47,6 +50,15 @@ describe('Unit tests for RecommendationService.js', () => {
       mockRecommendationRepository.vote().mockImplementationOnce(() => ({ object: true }));
       const result = await sut.upvote({ id: 1 });
       expect(result).toEqual({ object: true });
+    });
+
+    it('Should return an error: recommendation not found', async () => {
+      mockRecommendationRepository.findById().mockImplementationOnce(() => null);
+      try {
+        await sut.upvote({ id: 1 });
+      } catch (error) {
+        expect(error.name).toEqual('NotFound');
+      }
     });
   });
 });

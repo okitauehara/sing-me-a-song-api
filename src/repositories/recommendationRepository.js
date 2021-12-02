@@ -12,6 +12,7 @@ async function findById({ recommendationId }) {
   const result = await connection.query(`
       SELECT * FROM recommendations WHERE id = $1
     `, [recommendationId]);
+  if (!result) return null;
   return result.rows[0];
 }
 
