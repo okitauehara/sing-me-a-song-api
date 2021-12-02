@@ -1,74 +1,81 @@
 import connection from '../database/connection.js';
 
-class RecommendationRepository {
-  async findByYouTubeLink({ youtubeLink }) {
-    const result = await connection.query(`
+async function findByYouTubeLink({ youtubeLink }) {
+  const result = await connection.query(`
       SELECT * FROM recommendations WHERE "youtubeLink" = $1
     `, [youtubeLink]);
-    return result.rows[0];
-  }
+  return result.rows[0];
+}
 
-  async findById({ recommendationId }) {
-    const result = await connection.query(`
+async function findById({ recommendationId }) {
+  const result = await connection.query(`
       SELECT * FROM recommendations WHERE id = $1
     `, [recommendationId]);
-    return result.rows[0];
-  }
+  return result.rows[0];
+}
 
-  async findByScore({ sortNumber }) {
-    if (sortNumber <= 7) {
-      const result = await connection.query(`
+async function findByScore({ sortNumber }) {
+  if (sortNumber <= 7) {
+    const result = await connection.query(`
       SELECT * FROM recommendations WHERE score > 10
     `);
-      return result.rows;
-    }
-    const result = await connection.query(`
+    return result.rows;
+  }
+  const result = await connection.query(`
       SELECT * FROM recommendations WHERE score <= 10
     `);
-    return result.rows;
-  }
+  return result.rows;
+}
 
-  async findAll() {
-    const result = await connection.query(`
+async function findAll() {
+  const result = await connection.query(`
       SELECT * FROM recommendations
     `);
-    return result.rows;
-  }
+  return result.rows;
+}
 
-  async findByLimit({ limit }) {
-    const result = await connection.query(`
+async function findByLimit({ limit }) {
+  const result = await connection.query(`
       SELECT * FROM recommendations
       ORDER BY score DESC
       LIMIT $1
     `, [limit]);
-    return result.rows;
-  }
-
-  async insert({ name, youtubeLink }) {
-    const result = await connection.query(`
-      INSERT INTO recommendations (name, "youtubeLink") VALUES ($1, $2) RETURNING *
-    `, [name, youtubeLink]);
-    return result.rows[0];
-  }
-
-  async vote({ type, recommendationId }) {
-    if (type === 'upvote') {
-      const result = await connection.query(`
-      UPDATE recommendations SET score = score + 1 WHERE id = $1 RETURNING *
-    `, [recommendationId]);
-      return result.rows[0];
-    }
-    const result = await connection.query(`
-      UPDATE recommendations SET score = score - 1 WHERE id = $1 RETURNING *
-    `, [recommendationId]);
-    return result.rows[0];
-  }
-
-  async remove({ recommendationId }) {
-    return connection.query(`
-      DELETE FROM recommendations WHERE id = $1 
-    `, [recommendationId]);
-  }
+  return result.rows;
 }
 
-export default RecommendationRepository;
+async function insert({ name, youtubeLink }) {
+  const result = await connection.query(`
+      INSERT INTO recommendations (name, "youtubeLink") VALUES ($1, $2) RETURNING *
+    `, [name, youtubeLink]);
+  return result.rows[0];
+}
+
+async function vote({ type, recommendationId }) {
+  if (type === 'upvote') {
+    const result = await connection.query(`
+      UPDATE recommendations SET score = score + 1 WHERE id = $1 RETURNING *
+    `, [recommendationId]);
+    return result.rows[0];
+  }
+  const result = await connection.query(`
+      UPDATE recommendations SET score = score - 1 WHERE id = $1 RETURNING *
+    `, [recommendationId]);
+  return result.rows[0];
+}
+
+async function remove({ recommendationId }) {
+  return connection.query(`
+      DELETE FROM recommendations WHERE id = $1 
+    `, [recommendationId]);
+}
+
+export {
+  findByYouTubeLink,
+  findById,
+  findByScore,
+  findAll,
+  findByLimit,
+  insert,
+  vote,
+  remove,
+};
