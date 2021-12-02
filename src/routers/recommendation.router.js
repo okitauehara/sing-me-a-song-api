@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import * as recommendationController from '../controllers/recommendationController.js';
 
-const recommendationRouter = Router();
+const router = new Router();
 
-recommendationRouter.post('/recommendations', recommendationController.postRecommendation);
-recommendationRouter.post('/recommendations/:id/upvote', recommendationController.postUpvote);
-recommendationRouter.post('/recommendations/:id/downvote', recommendationController.postDownvote);
-recommendationRouter.get('/recommendations/random', recommendationController.getRecommendation);
-recommendationRouter.get('/recommendations/top/:amount', recommendationController.getTopRecommendations);
+router.post('', recommendationController.postRecommendation);
+router.post('/:id/upvote', recommendationController.postUpvote);
+router.post('/:id/downvote', recommendationController.postDownvote);
+router.get('/random', recommendationController.getRecommendation);
+router.get('/top/:amount', recommendationController.getTopRecommendations);
 
-export default recommendationRouter;
+export default router;
