@@ -61,6 +61,8 @@ class RecommendationService {
   async getTop({ limit }) {
     const recommendationRepository = new RecommendationRepository();
 
+    if (limit <= 0) throw new Error('Invalid amount');
+
     const result = await recommendationRepository.findByLimit({ limit });
     if (!result.length) throw new NotFound('No recommendations yet');
 
