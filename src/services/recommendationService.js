@@ -2,6 +2,7 @@ import * as recommendationRepository from '../repositories/recommendationReposit
 import { randomRecommendation, randomScore } from '../utils/randomFunctions.js';
 import NotFound from '../errors/NotFound.js';
 import Conflict from '../errors/Conflict.js';
+import InvalidValue from '../errors/InvalidValue.js';
 
 async function post({ name, youtubeLink }) {
   const checkLink = await recommendationRepository.findByYouTubeLink({ youtubeLink });
@@ -52,7 +53,7 @@ async function get() {
 }
 
 async function getTop({ limit }) {
-  if (limit <= 0) throw new Error('Invalid amount');
+  if (limit <= 0) throw new InvalidValue('Invalid amount');
 
   const result = await recommendationRepository.findByLimit({ limit });
   if (!result.length) throw new NotFound('No recommendations yet');
