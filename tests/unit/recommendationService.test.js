@@ -4,6 +4,7 @@ import * as recommendationRepository from '../../src/repositories/recommendation
 import * as randomFunctions from '../../src/utils/randomFunctions.js';
 import NotFound from '../../src/errors/NotFound.js';
 import Conflict from '../../src/errors/Conflict.js';
+import InvalidValue from '../../src/errors/InvalidValue.js';
 
 const sut = recommendationService;
 
@@ -136,6 +137,14 @@ describe('Unit tests for RecommendationService.js', () => {
       } catch (error) {
         expect(error.name).toEqual('NotFound');
       }
+    });
+  });
+
+  describe('Unit tests for getTop function', () => {
+    it('Should return an error: invalid amount if the limit value is -1', async () => {
+      const limit = -1;
+      const result = sut.getTop({ limit });
+      await expect(result).rejects.toThrowError(InvalidValue);
     });
   });
 });
