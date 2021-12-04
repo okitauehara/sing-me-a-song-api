@@ -244,7 +244,7 @@ The following tools were used in the construction of the project-api:
 -   **[Jest](https://github.com/facebook/jest)**
 -   **[Eslint - Airbnb](https://github.com/airbnb/javascript)**
 
-> See the file  [package.json](https://github.com/okitauehara/gratibox-api/blob/main/package.json)
+> See the file  [package.json](https://github.com/okitauehara/sing-me-a-song-api/blob/main/package.json)
 
 **Utilitários**
 
