@@ -146,5 +146,11 @@ describe('Unit tests for RecommendationService.js', () => {
       const result = sut.getTop({ limit });
       await expect(result).rejects.toThrowError(InvalidValue);
     });
+
+    it('Should return an error: invalid amount if the limit value is 0', async () => {
+      const limit = 0;
+      const result = sut.getTop({ limit });
+      await expect(result).rejects.toThrowError(InvalidValue);
+    });
   });
 });
