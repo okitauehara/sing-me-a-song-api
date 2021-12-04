@@ -152,5 +152,19 @@ describe('Unit tests for RecommendationService.js', () => {
       const result = sut.getTop({ limit });
       await expect(result).rejects.toThrowError(InvalidValue);
     });
+
+    it('Should return a list with the top recommendations', async () => {
+      const limit = 1;
+      mockRecommendationRepository.findByLimit({ limit }).mockImplementationOnce(() => ([{ object: 'random' }]));
+      const result = await sut.getTop({ limit });
+      expect(result).toEqual([{ object: 'random' }]);
+    });
+
+    it('Should return an error: no recommendations yet if the limit value is valid, but there is no recommendations registered on database yet', async () => {
+      const limit = 1;
+      mockRecommendationRepository.findByLimit({ limit }).mockImplementationOnce(() => []);
+      const result = sut.getTop({ limit });
+      await expect(result).rejects.toThrowError(NotFound);
+    });
   });
 });
