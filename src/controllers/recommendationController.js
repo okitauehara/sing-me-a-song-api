@@ -3,6 +3,7 @@ import recommendationIdSchema from '../schemas/recommendationIdSchema.js';
 import * as recommendationService from '../services/recommendationService.js';
 import NotFound from '../errors/NotFound.js';
 import Conflict from '../errors/Conflict.js';
+import InvalidValue from '../errors/InvalidValue.js';
 
 async function postRecommendation(req, res) {
   const { name, youtubeLink } = req.body;
@@ -69,6 +70,7 @@ async function getTopRecommendations(req, res) {
     const recommendations = await recommendationService.getTop({ limit: amount });
     return res.status(200).send(recommendations);
   } catch (err) {
+    if (err instanceof InvalidValue) return res.status(400).send(err.message);
     if (err instanceof NotFound) return res.status(404).send(err.message);
     return res.status(500).send(`Error on Recommendations: Unable to get top recommendations - ${err.message}`);
   }

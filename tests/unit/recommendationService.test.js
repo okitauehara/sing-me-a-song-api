@@ -123,14 +123,14 @@ describe('Unit tests for RecommendationService.js', () => {
     });
 
     it('Should return one random recommendation between bad recommendations', async () => {
-      mockRecommendationRepository.findByScore(8).mockImplementationOnce(() => () => [{ object: 'random' }]);
+      mockRecommendationRepository.findByScore(8).mockImplementationOnce(() => [{ object: 'random' }]);
       mockRandomFunctions.randomRecommendation([{ object: 'random' }]).mockImplementationOnce(() => ({ object: 'random' }));
       const result = await sut.get();
       expect(result).toEqual({ object: 'random' });
     });
 
     it('Should return an error: recommendation not found if both requests returned null values', async () => {
-      mockRecommendationRepository.findByScore(8).mockImplementationOnce(() => () => null);
+      mockRecommendationRepository.findByScore(8).mockImplementationOnce(() => null);
       mockRecommendationRepository.findAll().mockImplementationOnce(() => null);
       try {
         await sut.get();
