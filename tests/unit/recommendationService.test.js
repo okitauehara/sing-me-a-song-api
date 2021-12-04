@@ -2,6 +2,8 @@
 import * as recommendationService from '../../src/services/recommendationService.js';
 import * as recommendationRepository from '../../src/repositories/recommendationRepository.js';
 import * as randomFunctions from '../../src/utils/randomFunctions.js';
+import NotFound from '../../src/errors/NotFound.js';
+import Conflict from '../../src/errors/Conflict.js';
 
 const sut = recommendationService;
 
@@ -43,11 +45,8 @@ describe('Unit tests for RecommendationService.js', () => {
 
     it('Should return an error by conflict between links', async () => {
       mockRecommendationRepository.findByYouTubeLink().mockImplementationOnce(() => ({ youtubeLink: '' }));
-      try {
-        await sut.post({ name: '', youtubeLink: '' });
-      } catch (error) {
-        expect(error.name).toEqual('Conflict');
-      }
+      const result = sut.post({ name: '', youtubeLink: '' });
+      await expect(result).rejects.toThrowError(Conflict);
     });
   });
 
@@ -61,11 +60,8 @@ describe('Unit tests for RecommendationService.js', () => {
 
     it('Should return an error: recommendation not found', async () => {
       mockRecommendationRepository.findById().mockImplementationOnce(() => null);
-      try {
-        await sut.upvote({ id: 1 });
-      } catch (error) {
-        expect(error.name).toEqual('NotFound');
-      }
+      const result = sut.upvote({ id: 1 });
+      await expect(result).rejects.toThrowError(NotFound);
     });
   });
 
@@ -96,11 +92,8 @@ describe('Unit tests for RecommendationService.js', () => {
 
     it('Should return an error: recommendation not found', async () => {
       mockRecommendationRepository.findById().mockImplementationOnce(() => null);
-      try {
-        await sut.downvote({ id: 1 });
-      } catch (error) {
-        expect(error.name).toEqual('NotFound');
-      }
+      const result = sut.downvote({ id: 1 });
+      await expect(result).rejects.toThrowError(NotFound);
     });
   });
 
